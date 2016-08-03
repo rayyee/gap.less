@@ -1,0 +1,52 @@
+@sizes:       xxs, xs,  s,    m,    l,    xl,   xxl;
+@sizes-value: 3px, 8px, 15px, 20px, 30px, 50px, 80px;
+
+@directions: top, left, bottom, right;
+
+.gap-impl(@fix; @sel; @s; @sv) when (@fix = nil) {
+  .@{sel}-@{s} {
+    @{sel}: @sv;
+  }
+}
+
+.gap-impl(@fix; @sel; @s; @sv) when not (@fix = nil) and not (@fix = horizontal) and not (@fix = vertical) {
+  .@{sel}-@{fix}-@{s} {
+      @{sel}-@{fix}: @sv;
+  }
+}
+
+.gap-impl(@fix; @sel; @s; @sv) when (@fix = horizontal) {
+  .@{sel}-horizontal-@{s} {
+    @{sel}-left: @sv;
+    @{sel}-right: @sv;
+  }
+}
+
+.gap-impl(@fix; @sel; @s; @sv) when (@fix = vertical) {
+  .@{sel}-vertical-@{s} {
+    @{sel}-top: @sv;
+    @{sel}-bottom: @sv;
+  }
+}
+
+.gap(@type; @sizes; @sizes-value; @i; @sufix: nil) when (@i > 0) {
+  .gap(@type; @sizes; @sizes-value; (@i - 1); @sufix);
+  @s: extract(@sizes, @i);
+  @sv: extract(@sizes-value, @i);
+  .gap-impl(@sufix; @type; @s; @sv);
+}
+
+.gap-direction(@type; @directions; @sizes; @sizes-value; @i) when (@i > 0) {
+  .gap-direction(@type; @directions; @sizes; @sizes-value; (@i - 1));
+  @dir: extract(@directions, @i);
+  .gap(@type; @sizes; @sizes-value; length(@sizes); @dir);
+}
+
+.gap(margin; @sizes; @sizes-value; length(@sizes));
+.gap(padding; @sizes; @sizes-value; length(@sizes));
+.gap(margin; @sizes; @sizes-value; length(@sizes); horizontal);
+.gap(margin; @sizes; @sizes-value; length(@sizes); vertical);
+.gap(padding; @sizes; @sizes-value; length(@sizes); horizontal);
+.gap(padding; @sizes; @sizes-value; length(@sizes); vertical);
+.gap-direction(margin; @directions; @sizes; @sizes-value; length(@directions));
+.gap-direction(padding; @directions; @sizes; @sizes-value; length(@directions));
