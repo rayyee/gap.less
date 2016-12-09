@@ -1,52 +1,25 @@
-@sizes:       xxs, xs,  s,    m,    l,    xl,   xxl;
-@sizes-value: 3px, 8px, 15px, 20px, 30px, 50px, 80px;
 
-@directions: top, left, bottom, right;
+@sizes:         0,  1,  2,  3,  4,   5,   6;
+@size_values:   0,  2,  4,  8,  16,  32,  48;
 
-.gap-impl(@fix; @sel; @s; @sv) when (@fix = nil) {
-  .@{sel}-@{s} {
-    @{sel}: @sv;
-  }
-}
-
-.gap-impl(@fix; @sel; @s; @sv) when not (@fix = nil) and not (@fix = horizontal) and not (@fix = vertical) {
-  .@{sel}-@{fix}-@{s} {
-      @{sel}-@{fix}: @sv;
-  }
-}
-
-.gap-impl(@fix; @sel; @s; @sv) when (@fix = horizontal) {
-  .@{sel}-horizontal-@{s} {
-    @{sel}-left: @sv;
-    @{sel}-right: @sv;
-  }
-}
-
-.gap-impl(@fix; @sel; @s; @sv) when (@fix = vertical) {
-  .@{sel}-vertical-@{s} {
-    @{sel}-top: @sv;
-    @{sel}-bottom: @sv;
-  }
-}
-
-.gap(@type; @sizes; @sizes-value; @i; @sufix: nil) when (@i > 0) {
-  .gap(@type; @sizes; @sizes-value; (@i - 1); @sufix);
+.loop (@i) when(@i <= length(@sizes)) {
   @s: extract(@sizes, @i);
-  @sv: extract(@sizes-value, @i);
-  .gap-impl(@sufix; @type; @s; @sv);
-}
+  @sv: extract(@size_values, @i);
+  .m@{s} { margin: @sv; }
+  .p@{s} { padding: @sv; }
+  .mv@{s} { margin-top: @sv; margin-bottom: @sv; }
+  .pv@{s} { padding-top: @sv; padding-bottom: @sv; }
+  .mh@{s} { margin-left: @sv; margin-right: @sv; }
+  .ph@{s} { padding-left: @sv; padding-right: @sv; }
+  .ml@{s} { margin-left: @sv; }
+  .mr@{s} { margin-right: @sv; }
+  .mt@{s} { margin-top: @sv; }
+  .mb@{s} { margin-bottom: @sv; }
+  .pl@{s} { padding-left: @sv; }
+  .pr@{s} { padding-right: @sv; }
+  .pt@{s} { padding-top: @sv; }
+  .pb@{s} { padding-bottom: @sv; }
 
-.gap-direction(@type; @directions; @sizes; @sizes-value; @i) when (@i > 0) {
-  .gap-direction(@type; @directions; @sizes; @sizes-value; (@i - 1));
-  @dir: extract(@directions, @i);
-  .gap(@type; @sizes; @sizes-value; length(@sizes); @dir);
+  .loop(@i + 1);
 }
-
-.gap(margin; @sizes; @sizes-value; length(@sizes));
-.gap(padding; @sizes; @sizes-value; length(@sizes));
-.gap(margin; @sizes; @sizes-value; length(@sizes); horizontal);
-.gap(margin; @sizes; @sizes-value; length(@sizes); vertical);
-.gap(padding; @sizes; @sizes-value; length(@sizes); horizontal);
-.gap(padding; @sizes; @sizes-value; length(@sizes); vertical);
-.gap-direction(margin; @directions; @sizes; @sizes-value; length(@directions));
-.gap-direction(padding; @directions; @sizes; @sizes-value; length(@directions));
+.loop(1);
